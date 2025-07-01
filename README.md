@@ -1,5 +1,7 @@
 Simplified spy cats implemented with FastAPI 
 
+POSTMAN COLLECTION TO BE ADDED
+
 tools used:
 - Python
 - FastAPI
