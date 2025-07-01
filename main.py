@@ -55,16 +55,30 @@ class CatBase(SQLModel):
     breed: str = Field(
         description="Breed of the cat, must be a valid breed from The Cat API"
     )
-    salary: float | None = Field(gt=0)
+    salary: float | None 
 
-    # @validator("breed")
-    # def validate_breed(cls, value):
-    #     if value:
-    #         breed_API_URL = f"http://api.thecatapi.com/v1/breeds/{value}"
-    #         response = requests.get(breed_API_URL)
-    #         if response.status_code != 200:
-    #             raise ValueError(f"Invalid breed: {value}")
-    #     return value
+class Cat(CatBase, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+
+    @validator("breed")
+    def validate_breed(cls, value):
+        if value:
+            breed_API_URL = f"http://api.thecatapi.com/v1/breeds/{value}"
+            response = requests.get(breed_API_URL)
+            if response.status_code != 200:
+                raise ValueError(f"Invalid breed: {value}")
+        return value
+
+
+class CatsPublic(CatBase):
+    id: int
+
+
+# class CatUpdate(SQLModel):
+#     salary: float | None = Field(
+#         default=None, ge=0, description="New salary for the cat"
+#     )
+
 
 
 class TargetBase(SQLModel):
@@ -131,26 +145,6 @@ class MissionUpdate(SQLModel):
     )
 
 
-class Cat(CatBase, table=True):
-    id: int | None = Field(default=None, primary_key=True)
-    @validator("breed")
-    def validate_breed(cls, value):
-        if value:
-            breed_API_URL = f"http://api.thecatapi.com/v1/breeds/{value}"
-            response = requests.get(breed_API_URL)
-            if response.status_code != 200:
-                raise ValueError(f"Invalid breed: {value}")
-        return value
-
-
-class CatsPublic(CatBase):
-    id: int
-
-
-class CatUpdate(SQLModel):
-    salary: float | None = Field(
-        default=None, ge=0, description="New salary for the cat"
-    )
 
 
 @app.on_event("startup")
@@ -205,13 +199,17 @@ async def delete_cat(cat_id: int, session: SessionDep):
 
 @app.patch("/cats/{cat_id}", response_model=CatsPublic)
 async def update_cat_salary(
-    cat_id: int, session: SessionDep, new_salary: float = Query(ge=0)
+    cat_id: int, 
+    session: SessionDep, 
+    new_salary: float = Body(default=None, gt=0)
 ):
+    print(cat_id, new_salary)
     db_cat = session.get(Cat, cat_id)
     if not db_cat:
         raise HTTPException(status_code=404, detail="Cat not found")
 
     db_cat.sqlmodel_update({"salary": new_salary})
+    session.add(db_cat)
     session.commit()
     session.refresh(db_cat)
     return db_cat
