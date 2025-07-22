@@ -14,8 +14,8 @@ def get_cat_by_id(db: Session, cat_id: int):
         raise HTTPException(status_code=404, detail="Cat not found")
     return cat
 
-# TODO: add validation for cat breed
-def create_cat(db: Session, cat: schemas.CatCreate) -> Cat:
+def create_cat(db: Session, cat_data: schemas.CatCreate) -> Cat:
+    cat = Cat(**cat_data.model_dump())
     db.add(cat)
     db.commit()
     db.refresh(cat)

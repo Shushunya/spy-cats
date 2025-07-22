@@ -2,7 +2,7 @@ from fastapi import APIRouter, status
 
 from .. import dependencies
 from ..schemas import cats as schemas
-from ..models.cats import Cat
+from ..services import breeds as breeds_service
 from ..crud import cats as crud
 
 router = APIRouter(prefix="/cats", tags=["cats"])
@@ -23,6 +23,7 @@ async def read_cat(
 
 @router.post("/", response_model=schemas.CatRead, status_code=status.HTTP_201_CREATED)
 async def create_cat(cat: schemas.CatCreate, session: dependencies.SessionDep):
+    await breeds_service.validate_cat_breed(cat.breed)
     return crud.create_cat(session, cat)
 
 
