@@ -1,5 +1,8 @@
-from sqlmodel import Field, SQLModel
-from typing import Optional
+from sqlmodel import Field, SQLModel, Relationship
+from typing import Optional, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from ..models.missions import Mission
 
 
 class Cat(SQLModel, table=True):
@@ -16,11 +19,4 @@ class Cat(SQLModel, table=True):
     )
     salary: float | None
 
-    # @validator("breed")
-    # def validate_breed(cls, value):
-    #     if value:
-    #         breed_API_URL = f"http://api.thecatapi.com/v1/breeds/{value}"
-    #         response = requests.get(breed_API_URL)
-    #         if response.status_code != 200:
-    #             raise ValueError(f"Invalid breed: {value}")
-    #     return value
+    mission: Optional["Mission"] = Relationship(back_populates="cat")
