@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Body
 
 from .. import dependencies
-from ..models.cats import Cat, CatBase
+from ..models.cats import Cat
 from ..crud import cats as crud
 
 router = APIRouter(prefix="/cats", tags=["cats"])
@@ -21,7 +21,7 @@ async def read_cat(
 
 
 @router.post("/", response_model=Cat)
-async def create_cat(cat: CatBase, session: dependencies.SessionDep):
+async def create_cat(cat: Cat, session: dependencies.SessionDep):
     return crud.create_cat(session, cat)
 
 
