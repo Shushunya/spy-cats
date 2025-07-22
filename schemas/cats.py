@@ -22,7 +22,5 @@ class CatRead(CatBase):
     class Config:
         orm_mode = True 
 
-# class CatUpdate(BaseModel):
-#     salary: float | None = Field(
-#         default=None, ge=0, description="New salary for the cat"
-#     )
+class CatUpdate(BaseModel):
+    salary: float
