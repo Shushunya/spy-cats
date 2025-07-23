@@ -35,18 +35,18 @@ Spy Cats Backend is a lightweight FastAPI application for managing covert feline
 ## Installation
 
 1. Clone the repository:
-   git clone https://github.com/Shushunya/spy-cats.git
-   cd spy-cats-backend
+   `git clone https://github.com/Shushunya/spy-cats.git`
+   `cd spy-cats-backend`
 
 2. Set up a virtual environment:
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   `python -m venv venv`
+   `source venv/bin/activate  # On Windows: venv\Scripts\activate`
 
 3. Install dependencies:
-   pip install -r requirements.txt
+   `pip install -r requirements.txt`
 
 4. Run the development server:
-   uvicorn main:app --reload
+   `uvicorn main:app --reload`
 
 ---
 
